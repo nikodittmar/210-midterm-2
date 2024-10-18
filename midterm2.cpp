@@ -88,7 +88,7 @@ public:
 
     // pop_back() deletes a person at the specified position. Also notifies the user.
     // arguments: pos - the position of the person to remove.
-    // returns: void
+    // returns: true if the person was successfully deleted, false if otherwise
     bool delete_pos(int pos) {
         if (!head) {
             return false;
@@ -170,7 +170,7 @@ public:
     
     // pop_back() serves the first person in line. Also notifies the user.
     // arguments: none
-    // returns: void
+    // returns: true if the person was successfully deleted, false if otherwise
     bool pop_front() {
 
         if (!head) {
@@ -193,7 +193,7 @@ public:
 
     // pop_back() removes the last person in line. Also notifies the user.
     // arguments: none
-    // returns: void
+    // returns: true if the person was successfully deleted, false if otherwise
     bool pop_back() {
         if (!tail) {
             return false;
