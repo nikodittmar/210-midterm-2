@@ -86,13 +86,21 @@ public:
             cout << "List is empty." << endl;
             return;
         }
+
+        Node* temp = head;
     
         if (pos == 1) {
-            pop_front();
+            if (head->next) {
+                head = head->next;
+                head->prev = nullptr;
+            }
+            else
+                head = tail = nullptr;
+            delete temp;
+            size--;
+            cout << "   " << temp->name << " left the line" << endl;
             return;
         }
-    
-        Node* temp = head;
     
         for (int i = 1; i < pos; i++){
             if (!temp) {
@@ -115,8 +123,10 @@ public:
         Node* tempPrev = temp->prev;
         tempPrev->next = temp->next;
         temp->next->prev = tempPrev;
+        cout << "   " << temp->name << " left the line" << endl;
         delete temp;
         size--;
+        
     }
 
     void push_back(string name) {
@@ -216,6 +226,10 @@ public:
         }
         cout << endl;
     }
+
+    int getSize() {
+        return size;
+    }
 };
 
 
@@ -251,20 +265,28 @@ int main() {
     }
 
     line.print();
+    int prob = 0;
 
     for (int i = 1; i < 20; i++) {
         cout << "Time step #" << (i + 1) << ":" << endl;
-        int prob = rand() % 100 + 1;
+        prob = rand() % 100 + 1;
         if (prob <= 40) {
             line.pop_front();
         }
+        prob = rand() % 100 + 1;
         if (prob <= 60) {
             int random_index = rand() % names.size();
             string randomName = names[random_index];
             line.push_back(randomName);
         }
+        prob = rand() % 100 + 1;
         if (prob <= 20) {
             line.pop_back();
+        }
+        prob = rand() % 100 + 1;
+        if (prob <= 10) {
+            int random_pos = (rand() % line.getSize()) + 1;
+            line.delete_pos(random_pos);
         }
     }
 
