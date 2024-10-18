@@ -223,9 +223,24 @@ int main() {
         cout << names[i] << endl;
     }
 
+    srand(time(0));
+
+
     DoublyLinkedList line;
 
-    int step = 0;
+    cout << "Store opens:" << endl;
+
+    for (int i = 0; i < 5; i++) {
+        int random_index = rand() % names.size();
+        string randomName = names[random_index];
+        line.push_back(randomName);
+
+        cout << randomName << " joins the line" << endl;
+    }
+
+    for (int i = 0; i < 20; i++) {
+
+    }
 
 
     return 0;
