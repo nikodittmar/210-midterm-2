@@ -19,9 +19,10 @@ private:
 
     Node* head;
     Node* tail;
+    int size;
 
 public:
-    DoublyLinkedList() { head = nullptr; tail = nullptr; }
+    DoublyLinkedList() { head = nullptr; tail = nullptr; size = 0;}
 
     void insert_after(string value, int position) {
         if (position < 0) {
@@ -32,6 +33,7 @@ public:
         Node* newNode = new Node(value);
         if (!head) {
             head = tail = newNode;
+            size++;
             return;
         }
 
@@ -52,6 +54,7 @@ public:
         else
             tail = newNode;
         temp->next = newNode;
+        size++;
     }
 
     void delete_val(string name) {
@@ -75,6 +78,7 @@ public:
             tail = temp->prev; 
 
         delete temp;
+        size--;
     }
 
     void delete_pos(int pos) {
@@ -112,6 +116,7 @@ public:
         tempPrev->next = temp->next;
         temp->next->prev = tempPrev;
         delete temp;
+        size--;
     }
 
     void push_back(string name) {
@@ -124,7 +129,8 @@ public:
             tail = newNode;
         }
 
-        cout << name << " joins the line" << endl;
+        cout << "   " << name << " joins the line" << endl;
+        size++;
     }
     
     void push_front(string name) {
@@ -136,6 +142,7 @@ public:
             head->prev = newNode;
             head = newNode;
         }
+        size++;
     }
     
     void pop_front() {
@@ -146,6 +153,7 @@ public:
         }
 
         Node * temp = head;
+        cout << "   " << temp->name << " is served" << endl;
 
         if (head->next) {
             head = head->next;
@@ -154,6 +162,7 @@ public:
         else
             head = tail = nullptr;
         delete temp;
+        size--;
     }
 
     void pop_back() {
@@ -162,6 +171,7 @@ public:
             return;
         }
         Node * temp = tail;
+        cout << "   " << temp->name << " (at the rear) left the line"  << endl;
 
         if (tail->prev) {
             tail = tail->prev;
@@ -170,6 +180,7 @@ public:
         else
             head = tail = nullptr;
         delete temp;
+        size--;
     }
 
     ~DoublyLinkedList() {
@@ -187,7 +198,7 @@ public:
         }
         cout << "Resulting line:" << endl;
         while (current) {
-            cout << "   " << current->name << endl;
+            cout << "      " << current->name << endl;
             current = current->next;
         }
         cout << endl;
@@ -236,10 +247,9 @@ int main() {
     for (int i = 0; i < 5; i++) {
         int random_index = rand() % names.size();
         string randomName = names[random_index];
-        cout << "   ";
         line.push_back(randomName);
     }
-    cout << "   ";
+
     line.print();
 
     for (int i = 1; i < 20; i++) {
@@ -247,6 +257,14 @@ int main() {
         int prob = rand() % 100 + 1;
         if (prob <= 40) {
             line.pop_front();
+        }
+        if (prob <= 60) {
+            int random_index = rand() % names.size();
+            string randomName = names[random_index];
+            line.push_back(randomName);
+        }
+        if (prob <= 20) {
+            line.pop_back();
         }
     }
 
