@@ -79,10 +79,9 @@ public:
         size--;
     }
 
-    void delete_pos(int pos) {
+    bool delete_pos(int pos) {
         if (!head) {
-            cout << "List is empty." << endl;
-            return;
+            return false;
         }
 
         Node* temp = head;
@@ -97,25 +96,24 @@ public:
             delete temp;
             size--;
             cout << "   " << temp->name << " left the line" << endl;
-            return;
+            return true;
         }
     
         for (int i = 1; i < pos; i++){
             if (!temp) {
                 cout << "Position doesn't exist." << endl;
-                return;
+                return false;
             }
             else
                 temp = temp->next;
         }
         if (!temp) {
             cout << "Position doesn't exist." << endl;
-            return;
+            return false;
         }
     
         if (!temp->next) {
-            pop_back();
-            return;
+            return pop_back();;
         }
     
         Node* tempPrev = temp->prev;
@@ -124,7 +122,7 @@ public:
         cout << "   " << temp->name << " left the line" << endl;
         delete temp;
         size--;
-        
+        return true;
     }
 
     void push_back(string name) {
@@ -154,10 +152,10 @@ public:
         cout << "   " << name << " (VIP) joins the front of the line" << endl;
     }
     
-    void pop_front() {
+    bool pop_front() {
 
         if (!head) {
-            return;
+            return false;
         }
 
         Node * temp = head;
@@ -171,11 +169,12 @@ public:
             head = tail = nullptr;
         delete temp;
         size--;
+        return true;
     }
 
-    void pop_back() {
+    bool pop_back() {
         if (!tail) {
-            return;
+            return false;
         }
         Node * temp = tail;
         cout << "   " << temp->name << " (at the rear) left the line"  << endl;
@@ -188,6 +187,7 @@ public:
             head = tail = nullptr;
         delete temp;
         size--;
+        return true;
     }
 
     ~DoublyLinkedList() {
@@ -261,11 +261,12 @@ int main() {
     for (int i = 1; i < 20; i++) {
         cout << "Time step #" << (i + 1) << ":" << endl;
         bool event = false;
+
         prob = rand() % 100 + 1;
-        if (prob <= 40) {
-            line.pop_front();
+        if (prob <= 40 && line.pop_front()) {
             event = true;
         }
+
         prob = rand() % 100 + 1;
         if (prob <= 60) {
             int random_index = rand() % names.size();
@@ -273,17 +274,20 @@ int main() {
             line.push_back(randomName);
             event = true;
         }
+
         prob = rand() % 100 + 1;
-        if (prob <= 20) {
-            line.pop_back();
+        if (prob <= 20 && line.pop_back()) {
             event = true;
         }
+
         prob = rand() % 100 + 1;
         if (prob <= 10) {
             int random_pos = (rand() % line.getSize()) + 1;
-            line.delete_pos(random_pos);
-            event = true;
+            if (line.delete_pos(random_pos)) {;
+                event = true;
+            }
         }
+
         prob = rand() % 100 + 1;
         if (prob <= 10) {
             int random_index = rand() % names.size();
@@ -291,9 +295,11 @@ int main() {
             line.push_front(randomName);
             event = true;
         }
+
         if (!event) {
             cout << "   " << "Nothing happened" << endl;
         }
+
         line.print();
     }
 
