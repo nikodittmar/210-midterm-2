@@ -123,6 +123,8 @@ public:
             newNode->prev = tail;
             tail = newNode;
         }
+
+        cout << name << " joins the line" << endl;
     }
     
     void push_front(string name) {
@@ -180,11 +182,12 @@ public:
     void print() {
         Node* current = head;
         if (!current) {
-            cout << "List is empty." << endl;
+            cout << "The line is empty." << endl;
             return;
         }
+        cout << "Resulting line:" << endl;
         while (current) {
-            cout << current->name << " ";
+            cout << "   " << current->name << endl;
             current = current->next;
         }
         cout << endl;
@@ -233,13 +236,18 @@ int main() {
     for (int i = 0; i < 5; i++) {
         int random_index = rand() % names.size();
         string randomName = names[random_index];
+        cout << "   ";
         line.push_back(randomName);
-
-        cout << randomName << " joins the line" << endl;
     }
+    cout << "   ";
+    line.print();
 
-    for (int i = 0; i < 20; i++) {
-
+    for (int i = 1; i < 20; i++) {
+        cout << "Time step #" << (i + 1) << ":" << endl;
+        int prob = rand() % 100 + 1;
+        if (prob <= 40) {
+            line.pop_front();
+        }
     }
 
 
