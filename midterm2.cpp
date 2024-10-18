@@ -1,8 +1,9 @@
+// COMSC 210 | Midterm #2 | Niko Dittmar
 #include <fstream>
 #include <iostream>
 using namespace std;
 
-class DoublyLinkedList {
+class Line {
 private:
     struct Node {
         string name;
@@ -20,15 +21,18 @@ private:
     int size;
 
 public:
-    DoublyLinkedList() { head = nullptr; tail = nullptr; size = 0;}
+    Line() { head = nullptr; tail = nullptr; size = 0;}
 
-    void insert_after(string value, int position) {
+    // insert_after() adds a person in line after the specified position.
+    // arguments: name - the name of the person to add, position - the position to add them after.
+    // returns: void
+    void insert_after(string name, int position) {
         if (position < 0) {
             cout << "Position must be >= 0." << endl;
             return;
         }
 
-        Node* newNode = new Node(value);
+        Node* newNode = new Node(name);
         if (!head) {
             head = tail = newNode;
             size++;
@@ -55,6 +59,9 @@ public:
         size++;
     }
 
+    // pop_back() removes a person in line by name.
+    // arguments: name - the name of the person to remove.
+    // returns: void
     void delete_val(string name) {
         if (!head) return;
 
@@ -79,6 +86,9 @@ public:
         size--;
     }
 
+    // pop_back() deletes a person at the specified position. Also notifies the user.
+    // arguments: pos - the position of the person to remove.
+    // returns: void
     bool delete_pos(int pos) {
         if (!head) {
             return false;
@@ -125,6 +135,9 @@ public:
         return true;
     }
 
+    // pop_back() adds someone to the back of the line. Notifies the user.
+    // arguments: name - the name of the person to add.
+    // returns: void
     void push_back(string name) {
         Node* newNode = new Node(name);
         if (!tail)
@@ -139,6 +152,9 @@ public:
         size++;
     }
     
+    // push_front() adds a VIP to the front of the line. Notifies the user.
+    // arguments: name - the name of the VIP
+    // returns: void
     void push_front(string name) {
         Node* newNode = new Node(name);
         if (!head)
@@ -152,6 +168,9 @@ public:
         cout << "   " << name << " (VIP) joins the front of the line" << endl;
     }
     
+    // pop_back() serves the first person in line. Also notifies the user.
+    // arguments: none
+    // returns: void
     bool pop_front() {
 
         if (!head) {
@@ -172,6 +191,9 @@ public:
         return true;
     }
 
+    // pop_back() removes the last person in line. Also notifies the user.
+    // arguments: none
+    // returns: void
     bool pop_back() {
         if (!tail) {
             return false;
@@ -190,13 +212,17 @@ public:
         return true;
     }
 
-    ~DoublyLinkedList() {
+    ~Line() {
         while (head) {
             Node* temp = head;
             head = head->next;
             delete temp;
         }
     }
+
+    // print() prints the contents of the line.
+    // arguments: none
+    // returns: void
     void print() {
         Node* current = head;
         if (!current) {
@@ -211,75 +237,85 @@ public:
         cout << endl;
     }
 
+    // print_reverse() prints the contents of the line in reverse order.
+    // arguments: none
+    // returns: void
     void print_reverse() {
         Node* current = tail;
         if (!current) { 
             cout << "The line is empty" << endl << endl;
             return;
         }
+        cout << "Resulting line:" << endl;
         while (current) {
-            cout << current->name << " ";
+            cout << "      " << current->name << endl;
             current = current->prev;
         }
         cout << endl;
     }
 
+    // getSize() returns the size of the line.
+    // arguments: none
+    // returns: the size of the line (int)
     int getSize() {
         return size;
     }
 };
 
 
-
 int main() {
+    // Create names vector.
     vector<string> names;
 
     ifstream inputFile("names.txt");
 
     string name;
 
+    // Add names from the file into the names vector.
     while (getline(inputFile, name)) {
         names.push_back(name);
     }
 
+    // Set random seed.
     srand(time(0));
 
-
-    DoublyLinkedList line;
+    // Initialize the line.
+    Line line;
 
     cout << "Store opens:" << endl;
 
+    // Add initial 5 customers.
     for (int i = 0; i < 5; i++) {
         int random_index = rand() % names.size();
         string randomName = names[random_index];
         line.push_back(randomName);
     }
 
+    // Print the line.
     line.print();
+
     int prob = 0;
 
+    // Simulate the 20 timesteps.
     for (int i = 1; i < 20; i++) {
         cout << "Time step #" << (i + 1) << ":" << endl;
+
+        // Keep track if an event has occurred.
         bool event = false;
 
+        // Check if someone was served (40% probabilty)
         prob = rand() % 100 + 1;
         if (prob <= 40 && line.pop_front()) {
             event = true;
         }
 
-        prob = rand() % 100 + 1;
-        if (prob <= 60) {
-            int random_index = rand() % names.size();
-            string randomName = names[random_index];
-            line.push_back(randomName);
-            event = true;
-        }
-
+        // Check if someone was frustrated and left the line (20% probabilty)
         prob = rand() % 100 + 1;
         if (prob <= 20 && line.pop_back()) {
             event = true;
         }
 
+        // Check if a particular person in line decided to leave (10% probabilty)
         prob = rand() % 100 + 1;
         if (prob <= 10) {
             int random_pos = (rand() % line.getSize()) + 1;
@@ -288,6 +324,16 @@ int main() {
             }
         }
 
+        // Check if someone joined the line (60% probabilty)
+        prob = rand() % 100 + 1;
+        if (prob <= 60) {
+            int random_index = rand() % names.size();
+            string randomName = names[random_index];
+            line.push_back(randomName);
+            event = true;
+        }
+
+        // Check if a VIP has arrived (10% probability)
         prob = rand() % 100 + 1;
         if (prob <= 10) {
             int random_index = rand() % names.size();
@@ -296,10 +342,12 @@ int main() {
             event = true;
         }
 
+        // If no event happened, let the user know.
         if (!event) {
             cout << "   " << "Nothing happened" << endl;
         }
 
+        // Print the status of the line.
         line.print();
     }
 
