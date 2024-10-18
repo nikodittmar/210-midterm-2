@@ -2,8 +2,6 @@
 #include <iostream>
 using namespace std;
 
-const int MIN_NR = 10, MAX_NR = 99, MIN_LS = 5, MAX_LS = 20;
-
 class DoublyLinkedList {
 private:
     struct Node {
@@ -153,12 +151,12 @@ public:
             head = newNode;
         }
         size++;
+        cout << "   " << name << " (VIP) joins the front of the line" << endl;
     }
     
     void pop_front() {
 
         if (!head) {
-            cout << "List is empty." << endl;
             return;
         }
 
@@ -177,7 +175,6 @@ public:
 
     void pop_back() {
         if (!tail) {
-            cout << "List is empty." << endl;
             return;
         }
         Node * temp = tail;
@@ -203,7 +200,7 @@ public:
     void print() {
         Node* current = head;
         if (!current) {
-            cout << "The line is empty." << endl;
+            cout << "The line is empty" << endl << endl;
             return;
         }
         cout << "Resulting line:" << endl;
@@ -217,7 +214,7 @@ public:
     void print_reverse() {
         Node* current = tail;
         if (!current) { 
-            cout << "List is empty." << endl;
+            cout << "The line is empty" << endl << endl;
             return;
         }
         while (current) {
@@ -235,8 +232,6 @@ public:
 
 
 int main() {
-    cout << MIN_NR + MIN_LS + MAX_NR + MAX_LS;  // dummy statement to avoid compiler warning
-
     vector<string> names;
 
     ifstream inputFile("names.txt");
@@ -245,10 +240,6 @@ int main() {
 
     while (getline(inputFile, name)) {
         names.push_back(name);
-    }
-
-    for (int i = 0; i < names.size(); i++) {
-        cout << names[i] << endl;
     }
 
     srand(time(0));
@@ -269,25 +260,41 @@ int main() {
 
     for (int i = 1; i < 20; i++) {
         cout << "Time step #" << (i + 1) << ":" << endl;
+        bool event = false;
         prob = rand() % 100 + 1;
         if (prob <= 40) {
             line.pop_front();
+            event = true;
         }
         prob = rand() % 100 + 1;
         if (prob <= 60) {
             int random_index = rand() % names.size();
             string randomName = names[random_index];
             line.push_back(randomName);
+            event = true;
         }
         prob = rand() % 100 + 1;
         if (prob <= 20) {
             line.pop_back();
+            event = true;
         }
         prob = rand() % 100 + 1;
         if (prob <= 10) {
             int random_pos = (rand() % line.getSize()) + 1;
             line.delete_pos(random_pos);
+            event = true;
         }
+        prob = rand() % 100 + 1;
+        if (prob <= 10) {
+            int random_index = rand() % names.size();
+            string randomName = names[random_index];
+            line.push_front(randomName);
+            event = true;
+        }
+        if (!event) {
+            cout << "   " << "Nothing happened" << endl;
+        }
+        line.print();
     }
 
 
