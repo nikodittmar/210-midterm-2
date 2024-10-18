@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 using namespace std;
 
@@ -203,10 +204,28 @@ public:
     }
 };
 
+
+
 int main() {
     cout << MIN_NR + MIN_LS + MAX_NR + MAX_LS;  // dummy statement to avoid compiler warning
 
+    vector<string> names;
+
+    ifstream inputFile("names.txt");
+
+    string name;
+
+    while (getline(inputFile, name)) {
+        names.push_back(name);
+    }
+
+    for (int i = 0; i < names.size(); i++) {
+        cout << names[i] << endl;
+    }
+
     DoublyLinkedList line;
+
+    int step = 0;
 
 
     return 0;
